@@ -16,5 +16,14 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
-/target/*
-/lib/*
+/target/
+/lib/
+target/LockClock.jar
+
+target/classes/me/eccentric_nz/lockclock/LockClockListener.class
+
+target/classes/plugin.yml
+
+target/maven-archiver/pom.properties
+
+target/maven-archiver/pom.properties

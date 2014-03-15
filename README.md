@@ -6,6 +6,8 @@ The scoreboard clock is displayed in the sidebar and shows Minecraft time in a q
 
 Players with the permission `lockclock.clock` get the clock automatically at login.
 
+![image](https://dl.dropboxusercontent.com/u/53758864/lockclock.jpg)
+
 ##Commands
 There are four in-game commands:
 
