@@ -8,7 +8,7 @@ The scoreboard clock is displayed in the sidebar and shows Minecraft time in a q
 There are four in-game commands:
 
 Player Command  | Description | Usage | Alias(es)
-------------- | ------------- | -------------
+------------- | ------------- | ------------- | -------------
 `lock [from_time] [to_time]` | Lock a door, chest, furnace etc for a specified time. | `lock 10:30pm 6:00am` or in server ticks `lock 16500 0`, then click a block | timelock, lockclock, lockblock
 `lockmsg [message]`  | Add a message to a time locked block. | `lockmsg No! Go away.`, then click locked block | lockmessage, timemessage, timemsg
 `unlock` | Remove a time lock from a block. | `unlock`, then click locked block | -
