@@ -1,0 +1,19 @@
+# check http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html for lockable names
+lockables:
+- CHEST
+- TRAPPED_CHEST
+- ENDER_CHEST
+- ANVIL
+- BEACON
+- BREWING_STAND
+- DISPENSER
+- DROPPER
+- ENCHANTMENT_TABLE
+- FURNACE
+- HOPPER
+- IRON_DOOR_BLOCK
+- TRAP_DOOR
+- WOODEN_DOOR
+plugin_name: LockClock
+default_message: '&9This %s is locked. &2It will open at %s.'
+lock_for_owner: false

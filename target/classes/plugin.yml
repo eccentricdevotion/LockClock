@@ -1,0 +1,42 @@
+author: eccentric_nz
+description: Displays Minecraft time in a scoreboard and allows players to lock blocks for a set amount of time.
+main: me.eccentric_nz.lockclock.LockClock
+name: LockClock
+startup: postworld
+version: '1.0'
+website: http://dev.bukkit.org/bukkit-plugins/lockclock
+dev-url: http://dev.bukkit.org/bukkit-plugins/lockclock
+url: http://dev.bukkit.org/bukkit-plugins/lockclock
+permissions:
+    lockclock.lock:
+        description: Allow players to add time locks.
+        default: op
+    lockclock.message:
+        description: Allow players to add time lock messages.
+        default: op
+    lockclock.clock:
+        description: Allow players to have a clock scoreboard.
+        default: op
+commands:
+    clock:
+        description: Toggles the clock scoreboard on and off.
+        usage: /<command>
+        permission: lockclock.clock
+        permission-message: You don't have the permission <permission> to use this command
+    lockclock:
+        aliases: [lock,timelock,tl]
+        description: Lock a door, chest, furnace etc for a specified time.
+        usage: /<command> [time_from] [time_to]
+        permission: lockclock.lock
+        permission-message: You don't have the permission <permission> to use this command
+    lockmsg:
+        aliases: [lockmessage,timemessage,timemsg,tm]
+        description: Add a message to a time locked block.
+        usage: /<command> [message]
+        permission: lockclock.message
+        permission-message: You don't have the permission <permission> to use this command
+    unlock:
+        description: Remove a time lock from a block.
+        usage: /<command>
+        permission: lockclock.lock
+        permission-message: You don't have the permission <permission> to use this command
