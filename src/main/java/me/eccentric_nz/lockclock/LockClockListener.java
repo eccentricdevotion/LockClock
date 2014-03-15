@@ -102,23 +102,25 @@ public class LockClockListener implements Listener {
             LockClockLock rs = new LockClockLock(plugin, b.getLocation().toString());
             // is there a lock?
             if (rs.resultSet()) {
-                if (plugin.getUnlockTracker().contains(name) && (rs.getPlayer().equals(name) || event.getPlayer().isOp())) {
-                    plugin.getUnlockTracker().remove(name);
-                    LockClockQuery lcq = new LockClockQuery(plugin);
-                    lcq.deleteLock(rs.getId());
-                    // check for double chests
-                    if (b.getType().equals(Material.CHEST) || b.getType().equals(Material.TRAPPED_CHEST)) {
-                        String l = isDoubleChest(b);
-                        if (!l.isEmpty()) {
-                            lcq.deleteLock(l);
+                if (plugin.getUnlockTracker().contains(name)) {
+                    if (rs.getPlayer().equals(name) || event.getPlayer().isOp()) {
+                        plugin.getUnlockTracker().remove(name);
+                        LockClockQuery lcq = new LockClockQuery(plugin);
+                        lcq.deleteLock(rs.getId());
+                        // check for double chests
+                        if (b.getType().equals(Material.CHEST) || b.getType().equals(Material.TRAPPED_CHEST)) {
+                            String l = isDoubleChest(b);
+                            if (!l.isEmpty()) {
+                                lcq.deleteLock(l);
+                            }
                         }
+                        event.getPlayer().sendMessage(plugin.pluginName + "Time lock removed succesfully.");
+                        plugin.getUnlockTracker().remove(name);
+                        return;
+                    } else {
+                        event.getPlayer().sendMessage(plugin.pluginName + "You can only remove your own time locks.");
+                        plugin.getUnlockTracker().remove(name);
                     }
-                    event.getPlayer().sendMessage(plugin.pluginName + "Time lock removed succesfully.");
-                    plugin.getUnlockTracker().remove(name);
-                    return;
-                } else {
-                    event.getPlayer().sendMessage(plugin.pluginName + "You can only remove your own time locks.");
-                    plugin.getUnlockTracker().remove(name);
                 }
                 // only if not the player whose lock it is
                 if (!name.equals(rs.getPlayer()) || plugin.getConfig().getBoolean("lock_for_owner")) {

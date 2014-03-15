@@ -9,7 +9,7 @@ dev-url: http://dev.bukkit.org/bukkit-plugins/lockclock
 url: http://dev.bukkit.org/bukkit-plugins/lockclock
 permissions:
     lockclock.lock:
-        description: Allow players to add time locks.
+        description: Allow players to add/remove time locks.
         default: op
     lockclock.message:
         description: Allow players to add time lock messages.

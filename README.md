@@ -4,6 +4,8 @@ A Bukkit plugin to display Minecraft time in a scoreboard and allow players to l
 ##The scoreboard clock
 The scoreboard clock is displayed in the sidebar and shows Minecraft time in a quasi-military format- that is, 24-hour time (without leading zeroes). The clock can been hidden/shown with a command (see __Commands__ below).
 
+Players with the permission `lockclock.clock` get the clock automatically at login.
+
 ##Commands
 There are four in-game commands:
 
@@ -20,6 +22,13 @@ Console Command  | Description
 ------------- | -------------
 `lock`  | Toggle the `lock_for_owner` config option between `true` and `false`.
 `lockmsg`  | Set the `default_message` in the config.
+
+##Permissions
+`lockclock.lock` - Allow players to add/remove time locks.
+
+`lockclock.message` - Allow players to add time lock messages.
+
+`lockclock.clock` - Allow players to have a clock scoreboard.
 
 
 ##Configuration
