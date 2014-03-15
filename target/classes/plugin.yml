@@ -24,13 +24,13 @@ commands:
         permission: lockclock.clock
         permission-message: You don't have the permission <permission> to use this command
     lockclock:
-        aliases: [lock,timelock,tl]
+        aliases: [lock,lockblock,timelock]
         description: Lock a door, chest, furnace etc for a specified time.
         usage: /<command> [time_from] [time_to]
         permission: lockclock.lock
         permission-message: You don't have the permission <permission> to use this command
     lockmsg:
-        aliases: [lockmessage,timemessage,timemsg,tm]
+        aliases: [lockmessage,timemessage,timemsg]
         description: Add a message to a time locked block.
         usage: /<command> [message]
         permission: lockclock.message
