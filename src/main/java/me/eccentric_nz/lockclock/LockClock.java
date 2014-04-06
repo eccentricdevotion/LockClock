@@ -37,6 +37,7 @@ public class LockClock extends JavaPlugin {
         saveDefaultConfig();
         new LockClockConfig(this).checkConfig();
         PluginManager pm = getServer().getPluginManager();
+        service = LockClockDatabase.getInstance();
         try {
             String path = getDataFolder() + File.separator + "Locks.db";
             service.setConnection(path);
@@ -66,14 +67,6 @@ public class LockClock extends JavaPlugin {
         getCommand("unlock").setExecutor(new LockClockCommand(this));
         getCommand("clock").setExecutor(new LockClockCommand(this));
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockRunnable(this), 10L, 8L);
-        service = LockClockDatabase.getInstance();
-        try {
-            String path = getDataFolder() + File.separator + "Locks.db";
-            service.setConnection(path);
-            service.createTable();
-        } catch (Exception e) {
-            debug("Connection and Table Error: " + e);
-        }
         for (String s : getConfig().getStringList("lockables")) {
             try {
                 lockables.add(Material.valueOf(s));
