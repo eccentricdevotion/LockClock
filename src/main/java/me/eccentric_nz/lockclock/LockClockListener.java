@@ -78,7 +78,8 @@ public class LockClockListener implements Listener {
                             set.put("location", l);
                             set.put("start", rs.getStart());
                             set.put("end", rs.getEnd());
-                            set.put("player", uuid);
+                            set.put("uuid", uuid.toString());
+                            set.put("player", event.getPlayer().getName());
                             new LockClockQuery(plugin).doSyncInsert(set);
                             plugin.getDoubleChestTracker().put(uuid, l);
                         }
