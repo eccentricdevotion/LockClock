@@ -30,7 +30,8 @@ public class LockClockScoreboard {
     public Scoreboard getScoreboard() {
 
         Scoreboard board = manager.getNewScoreboard();
-        Objective objective = board.registerNewObjective(player.getName().substring(0, 10) + "Clock", "Time");
+        String obj = (player.getName().length() > 11) ? player.getName().substring(0, 10) : player.getName();
+        Objective objective = board.registerNewObjective(obj + "Clock", "Time");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName("Time");
         Score hm = objective.getScore(plugin.getServer().getOfflinePlayer(ChatColor.GREEN + "Hrs:"));

@@ -2,8 +2,8 @@ author: eccentric_nz
 description: Displays Minecraft time in a scoreboard and allows players to lock blocks for a set amount of time.
 main: me.eccentric_nz.lockclock.LockClock
 name: LockClock
-startup: postworld
-version: '1.0'
+load: POSTWORLD
+version: '1.0.1'
 website: http://dev.bukkit.org/bukkit-plugins/lockclock
 dev-url: http://dev.bukkit.org/bukkit-plugins/lockclock
 url: http://dev.bukkit.org/bukkit-plugins/lockclock
