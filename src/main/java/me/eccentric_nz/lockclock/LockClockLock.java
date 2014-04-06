@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  *
@@ -22,6 +23,7 @@ public class LockClockLock {
     private String location;
     private long start;
     private long end;
+    private UUID uuid;
     private String player;
     private String message;
 
@@ -43,6 +45,7 @@ public class LockClockLock {
                     this.location = rs.getString("location");
                     this.start = rs.getLong("start");
                     this.end = rs.getLong("end");
+                    this.uuid = UUID.fromString(rs.getString("uuid"));
                     this.player = rs.getString("player");
                     this.message = rs.getString("message");
                 }
@@ -50,7 +53,7 @@ public class LockClockLock {
                 return false;
             }
         } catch (SQLException e) {
-            plugin.debug("ResultSet error for doors table! " + e.getMessage());
+            plugin.debug("ResultSet error for locks table! " + e.getMessage());
             return false;
         } finally {
             try {
@@ -61,7 +64,7 @@ public class LockClockLock {
                     statement.close();
                 }
             } catch (SQLException e) {
-                plugin.debug("Error closing doors table! " + e.getMessage());
+                plugin.debug("Error closing locks table! " + e.getMessage());
             }
         }
         return true;
@@ -81,6 +84,10 @@ public class LockClockLock {
 
     public long getEnd() {
         return end;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public String getPlayer() {

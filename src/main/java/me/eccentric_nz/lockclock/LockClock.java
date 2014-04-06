@@ -1,9 +1,11 @@
 package me.eccentric_nz.lockclock;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
@@ -14,22 +16,48 @@ public class LockClock extends JavaPlugin {
 
     public String pluginName;
     LockClockDatabase service;
-    private final HashMap<String, Scoreboard> scoreboards = new HashMap<String, Scoreboard>();
-    private final HashMap<String, Integer> addTracker = new HashMap<String, Integer>();
-    private final HashMap<String, String> msgTracker = new HashMap<String, String>();
-    private final HashMap<String, String> doubleChestTracker = new HashMap<String, String>();
-    private final List<String> unlockTracker = new ArrayList<String>();
+    private final HashMap<UUID, Scoreboard> scoreboards = new HashMap<UUID, Scoreboard>();
+    private final HashMap<UUID, Integer> addTracker = new HashMap<UUID, Integer>();
+    private final HashMap<UUID, String> msgTracker = new HashMap<UUID, String>();
+    private final HashMap<UUID, String> doubleChestTracker = new HashMap<UUID, String>();
+    private final List<UUID> unlockTracker = new ArrayList<UUID>();
     private final List<Material> lockables = new ArrayList<Material>();
 
     @Override
     public void onDisable() {
-        // TODO: Place any custom disable code here.
+        try {
+            service.connection.close();
+        } catch (SQLException e) {
+            System.err.println("[LockClock] Could not close database connection: " + e);
+        }
     }
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        new LockClockConfig(this).checkConfig();
         PluginManager pm = getServer().getPluginManager();
+        try {
+            String path = getDataFolder() + File.separator + "Locks.db";
+            service.setConnection(path);
+            service.createTable();
+        } catch (Exception e) {
+            debug("Connection and Table Error: " + e);
+        }
+        // update database add and populate uuid fields
+        if (!getConfig().getBoolean("uuid_conversion_done")) {
+            LockClockUUIDConverter uc = new LockClockUUIDConverter(this);
+            if (!uc.convert()) {
+                // conversion failed
+                System.err.println("[LockClock]" + ChatColor.RED + "UUID conversion failed, disabling...");
+                pm.disablePlugin(this);
+                return;
+            } else {
+                getConfig().set("uuid_conversion_done", true);
+                saveConfig();
+                System.out.println("[LockClock] UUID conversion successful :)");
+            }
+        }
         String plug = getConfig().getString("plugin_name");
         pluginName = ChatColor.GOLD + "[" + plug + "]" + ChatColor.RESET + " ";
         pm.registerEvents(new LockClockListener(this), this);
@@ -74,23 +102,23 @@ public class LockClock extends JavaPlugin {
         return String.format("%d", hours + minutes);
     }
 
-    public HashMap<String, Scoreboard> getScoreboards() {
+    public HashMap<UUID, Scoreboard> getScoreboards() {
         return scoreboards;
     }
 
-    public HashMap<String, Integer> getAddTracker() {
+    public HashMap<UUID, Integer> getAddTracker() {
         return addTracker;
     }
 
-    public HashMap<String, String> getMsgTracker() {
+    public HashMap<UUID, String> getMsgTracker() {
         return msgTracker;
     }
 
-    public HashMap<String, String> getDoubleChestTracker() {
+    public HashMap<UUID, String> getDoubleChestTracker() {
         return doubleChestTracker;
     }
 
-    public List<String> getUnlockTracker() {
+    public List<UUID> getUnlockTracker() {
         return unlockTracker;
     }
 

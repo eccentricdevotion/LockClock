@@ -3,6 +3,7 @@ package me.eccentric_nz.lockclock;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,18 +29,18 @@ public class LockClockListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         if (player.hasPermission("lockclock.clock")) {
-            String name = player.getName();
-            if (!plugin.getScoreboards().containsKey(name)) {
-                plugin.getScoreboards().put(name, new LockClockScoreboard(plugin, player).getScoreboard());
+            UUID uuid = player.getUniqueId();
+            if (!plugin.getScoreboards().containsKey(uuid)) {
+                plugin.getScoreboards().put(uuid, new LockClockScoreboard(plugin, player).getScoreboard());
             }
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onLeave(PlayerQuitEvent event) {
-        String name = event.getPlayer().getName();
-        if (plugin.getScoreboards().containsKey(name)) {
-            plugin.getScoreboards().remove(name);
+        UUID uuid = event.getPlayer().getUniqueId();
+        if (plugin.getScoreboards().containsKey(uuid)) {
+            plugin.getScoreboards().remove(uuid);
         }
     }
 
@@ -54,16 +55,16 @@ public class LockClockListener implements Listener {
                     b = b.getRelative(BlockFace.DOWN);
                 }
             }
-            String name = event.getPlayer().getName();
-            if (plugin.getAddTracker().containsKey(name)) {
+            UUID uuid = event.getPlayer().getUniqueId();
+            if (plugin.getAddTracker().containsKey(uuid)) {
                 // is it an allowed block?
                 if (!plugin.getLockables().contains(b.getType())) {
                     event.getPlayer().sendMessage(plugin.pluginName + "You are not allowed to lock that kind of block!");
-                    plugin.getAddTracker().remove(name);
+                    plugin.getAddTracker().remove(uuid);
                     return;
                 }
                 // add clicked block location to database
-                new LockClockQuery(plugin).updateLockLocation(b.getLocation().toString(), plugin.getAddTracker().get(name));
+                new LockClockQuery(plugin).updateLockLocation(b.getLocation().toString(), plugin.getAddTracker().get(uuid));
                 // check for double chests
                 if (b.getType().equals(Material.CHEST) || b.getType().equals(Material.TRAPPED_CHEST)) {
                     String l = isDoubleChest(b);
@@ -77,34 +78,34 @@ public class LockClockListener implements Listener {
                             set.put("location", l);
                             set.put("start", rs.getStart());
                             set.put("end", rs.getEnd());
-                            set.put("player", name);
+                            set.put("player", uuid);
                             new LockClockQuery(plugin).doSyncInsert(set);
-                            plugin.getDoubleChestTracker().put(name, l);
+                            plugin.getDoubleChestTracker().put(uuid, l);
                         }
                     }
                 }
-                plugin.getAddTracker().remove(name);
+                plugin.getAddTracker().remove(uuid);
                 event.getPlayer().sendMessage(plugin.pluginName + "Time lock location saved succesfully.");
                 return;
             }
-            if (plugin.getMsgTracker().containsKey(name)) {
+            if (plugin.getMsgTracker().containsKey(uuid)) {
                 // add clicked block message to database
-                new LockClockQuery(plugin).updateLockMessage(plugin.getMsgTracker().get(name), b.getLocation().toString());
+                new LockClockQuery(plugin).updateLockMessage(plugin.getMsgTracker().get(uuid), b.getLocation().toString());
                 // check for double chest
-                if (plugin.getDoubleChestTracker().containsKey(name)) {
-                    new LockClockQuery(plugin).updateLockMessage(plugin.getMsgTracker().get(name), plugin.getDoubleChestTracker().get(name));
-                    plugin.getDoubleChestTracker().remove(name);
+                if (plugin.getDoubleChestTracker().containsKey(uuid)) {
+                    new LockClockQuery(plugin).updateLockMessage(plugin.getMsgTracker().get(uuid), plugin.getDoubleChestTracker().get(uuid));
+                    plugin.getDoubleChestTracker().remove(uuid);
                 }
-                plugin.getMsgTracker().remove(name);
+                plugin.getMsgTracker().remove(uuid);
                 event.getPlayer().sendMessage(plugin.pluginName + "Time lock message saved succesfully.");
                 return;
             }
             LockClockLock rs = new LockClockLock(plugin, b.getLocation().toString());
             // is there a lock?
             if (rs.resultSet()) {
-                if (plugin.getUnlockTracker().contains(name)) {
-                    if (rs.getPlayer().equals(name) || event.getPlayer().isOp()) {
-                        plugin.getUnlockTracker().remove(name);
+                if (plugin.getUnlockTracker().contains(uuid)) {
+                    if (rs.getUuid().equals(uuid) || event.getPlayer().isOp()) {
+                        plugin.getUnlockTracker().remove(uuid);
                         LockClockQuery lcq = new LockClockQuery(plugin);
                         lcq.deleteLock(rs.getId());
                         // check for double chests
@@ -115,15 +116,15 @@ public class LockClockListener implements Listener {
                             }
                         }
                         event.getPlayer().sendMessage(plugin.pluginName + "Time lock removed succesfully.");
-                        plugin.getUnlockTracker().remove(name);
+                        plugin.getUnlockTracker().remove(uuid);
                         return;
                     } else {
                         event.getPlayer().sendMessage(plugin.pluginName + "You can only remove your own time locks.");
-                        plugin.getUnlockTracker().remove(name);
+                        plugin.getUnlockTracker().remove(uuid);
                     }
                 }
                 // only if not the player whose lock it is
-                if (!name.equals(rs.getPlayer()) || plugin.getConfig().getBoolean("lock_for_owner")) {
+                if (!uuid.equals(rs.getPlayer()) || plugin.getConfig().getBoolean("lock_for_owner")) {
                     // get the time of the event
                     long now = b.getLocation().getWorld().getTime();
                     // get start and end times

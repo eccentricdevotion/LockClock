@@ -5,6 +5,7 @@ package me.eccentric_nz.lockclock;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -34,9 +35,17 @@ public class LockClockDatabase {
     public void createTable() {
         try {
             statement = connection.createStatement();
-            String queryLocks = "CREATE TABLE IF NOT EXISTS locks (id INTEGER PRIMARY KEY NOT NULL, location TEXT, start INTEGER, end INTEGER, message TEXT DEFAULT '', player TEXT)";
+            String queryLocks = "CREATE TABLE IF NOT EXISTS locks (id INTEGER PRIMARY KEY NOT NULL, location TEXT, start INTEGER, end INTEGER, message TEXT DEFAULT '', uuid TEXT DEFAULT '', player TEXT DEFAULT '')";
             statement.executeUpdate(queryLocks);
             statement.close();
+            // update inventories if there is no uuid column
+            String queryUUID = "SELECT sql FROM sqlite_master WHERE tbl_name = 'locks' AND sql LIKE '%uuid TEXT%'";
+            ResultSet rsUUID = statement.executeQuery(queryUUID);
+            if (!rsUUID.next()) {
+                String queryAlterU = "ALTER TABLE locks ADD uuid TEXT DEFAULT ''";
+                statement.executeUpdate(queryAlterU);
+                System.out.println("[LockClock] Adding UUID to database!");
+            }
         } catch (SQLException e) {
             System.err.println("[LockClock] Create table error: " + e);
         }

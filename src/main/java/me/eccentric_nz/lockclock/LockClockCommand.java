@@ -1,6 +1,7 @@
 package me.eccentric_nz.lockclock;
 
 import java.util.HashMap;
+import java.util.UUID;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,6 +29,7 @@ public class LockClockCommand implements CommandExecutor {
                 sender.sendMessage(plugin.pluginName + "'lock_for_owner' set to " + ((bool) ? "true" : "false"));
                 return true;
             } else {
+                UUID uuid = player.getUniqueId();
                 String name = player.getName();
                 if (player.hasPermission("lockclock.lock")) {
                     if (args.length < 2) {
@@ -40,9 +42,10 @@ public class LockClockCommand implements CommandExecutor {
                     HashMap<String, Object> set = new HashMap<String, Object>();
                     set.put("start", start);
                     set.put("end", end);
+                    set.put("uuid", uuid.toString());
                     set.put("player", name);
                     int key = new LockClockQuery(plugin).doSyncInsert(set);
-                    plugin.getAddTracker().put(name, key);
+                    plugin.getAddTracker().put(uuid, key);
                     player.sendMessage(plugin.pluginName + "Click the block you want to time lock!");
                     return true;
                 } else {
@@ -66,7 +69,7 @@ public class LockClockCommand implements CommandExecutor {
                 return true;
             } else {
                 if (player.hasPermission("lockclock.message")) {
-                    plugin.getMsgTracker().put(player.getName(), sb.toString().trim());
+                    plugin.getMsgTracker().put(player.getUniqueId(), sb.toString().trim());
                     player.sendMessage(plugin.pluginName + "Click the block you want to set a message for!");
                     return true;
                 } else {
@@ -80,7 +83,7 @@ public class LockClockCommand implements CommandExecutor {
                 return true;
             } else {
                 if (player.hasPermission("lockclock.lock")) {
-                    plugin.getUnlockTracker().add(player.getName());
+                    plugin.getUnlockTracker().add(player.getUniqueId());
                     player.sendMessage(plugin.pluginName + "Click the block you want to unlock!");
                     return true;
                 } else {
@@ -94,12 +97,12 @@ public class LockClockCommand implements CommandExecutor {
                 return true;
             } else {
                 if (player.hasPermission("lockclock.clock")) {
-                    String name = player.getName();
-                    if (plugin.getScoreboards().containsKey(name)) {
+                    UUID uuid = player.getUniqueId();
+                    if (plugin.getScoreboards().containsKey(uuid)) {
                         player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
-                        plugin.getScoreboards().remove(name);
+                        plugin.getScoreboards().remove(uuid);
                     } else {
-                        plugin.getScoreboards().put(name, new LockClockScoreboard(plugin, player).getScoreboard());
+                        plugin.getScoreboards().put(uuid, new LockClockScoreboard(plugin, player).getScoreboard());
                     }
                     return true;
                 } else {
