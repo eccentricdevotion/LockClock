@@ -25,8 +25,8 @@ public class LockClockRunnable implements Runnable {
     public void run() {
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             if (p.hasPermission("lockclock.clock")) {
-                if (plugin.getScoreboards().containsKey(p.getName())) {
-                    Scoreboard board = plugin.getScoreboards().get(p.getName());
+                if (plugin.getScoreboards().containsKey(p.getUniqueId())) {
+                    Scoreboard board = plugin.getScoreboards().get(p.getUniqueId());
                     if (board != null) {
                         Objective objective = board.getObjective(DisplaySlot.SIDEBAR);
                         objective.getScore(plugin.getServer().getOfflinePlayer(ChatColor.GREEN + "Hrs:")).setScore(plugin.getTime(p.getLocation().getWorld().getName()));
