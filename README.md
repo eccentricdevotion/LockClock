@@ -38,18 +38,32 @@ The default configuration is shown below:
 
 ```
 lockables:
-- CHEST
-- TRAPPED_CHEST
-- ENDER_CHEST
+- ACACIA_DOOR
+- ACACIA_FENCE_GATE
 - ANVIL
 - BEACON
+- BIRCH_DOOR
+- BIRCH_FENCE_GATE
 - BREWING_STAND
+- CHEST
+- DARK_OAK_DOOR
+- DARK_OAK_FENCE_GATE
 - DISPENSER
 - DROPPER
 - ENCHANTMENT_TABLE
+- ENDER_CHEST
+- FENCE_GATE
 - FURNACE
+- GOLD_PLATE
 - HOPPER
 - IRON_DOOR_BLOCK
+- IRON_PLATE
+- IRON_TRAPDOOR
+- JUNGLE_DOOR
+- JUNGLE_FENCE_GATE
+- SPRUCE_DOOR
+- SPRUCE_FENCE_GATE
+- TRAPPED_CHEST
 - TRAP_DOOR
 - WOODEN_DOOR
 plugin_name: LockClock
@@ -57,7 +71,7 @@ default_message: '&9This %s is locked. &2It will open at %s.'
 lock_for_owner: false
 ```
 ####`lockables`
-The lockables list allows you to configure which blocks can be locked in-game. Only blocks appearing here will be lockable. Check [http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html](http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html) for valid lockable names.
+The lockables list allows you to configure which blocks can be locked in-game. Only blocks appearing here will be lockable. Check [https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/Material.java](https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/Material.java) for valid lockable names.
 
 ####`plugin_name`
 You can change the string that appears before the plugin's in-game messages. It defaults to the plugin name, but you could for example, change it to `TimeLock`.
