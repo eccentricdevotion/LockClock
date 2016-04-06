@@ -1,17 +1,31 @@
-# check http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html for lockable names
+# check https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/Material.java for lockable names
 lockables:
-- CHEST
-- TRAPPED_CHEST
-- ENDER_CHEST
+- ACACIA_DOOR
+- ACACIA_FENCE_GATE
 - ANVIL
 - BEACON
+- BIRCH_DOOR
+- BIRCH_FENCE_GATE
 - BREWING_STAND
+- CHEST
+- DARK_OAK_DOOR
+- DARK_OAK_FENCE_GATE
 - DISPENSER
 - DROPPER
 - ENCHANTMENT_TABLE
+- ENDER_CHEST
+- FENCE_GATE
 - FURNACE
+- GOLD_PLATE
 - HOPPER
 - IRON_DOOR_BLOCK
+- IRON_PLATE
+- IRON_TRAPDOOR
+- JUNGLE_DOOR
+- JUNGLE_FENCE_GATE
+- SPRUCE_DOOR
+- SPRUCE_FENCE_GATE
+- TRAPPED_CHEST
 - TRAP_DOOR
 - WOODEN_DOOR
 plugin_name: LockClock
