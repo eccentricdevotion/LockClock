@@ -71,7 +71,9 @@ public class LockClock extends JavaPlugin {
         getCommand("clock").setExecutor(new LockClockCommand(this));
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockRunnable(this), 10L, 8L);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockDoorCloser(this), 20L, 60L);
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockDoorWarner(this), 20L, 600L);
+        if (getConfig().getInt("warn.time") > 0) {
+            getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockDoorWarner(this), 20L, 600L);
+        }
         for (String s : getConfig().getStringList("lockables")) {
             try {
                 lockables.add(Material.valueOf(s));
