@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class LockClockListener implements Listener {
 
     private final LockClock plugin;
-    private final List<BlockFace> faces = Arrays.asList(new BlockFace[]{BlockFace.NORTH, BlockFace.WEST, BlockFace.SOUTH, BlockFace.EAST});
+    private final List<BlockFace> faces = Arrays.asList(BlockFace.NORTH, BlockFace.WEST, BlockFace.SOUTH, BlockFace.EAST);
 
     public LockClockListener(LockClock plugin) {
         this.plugin = plugin;
@@ -49,7 +49,7 @@ public class LockClockListener implements Listener {
         Block b = event.getClickedBlock();
         if (b != null) {
             // is the block a door?
-            if (b.getType().equals(Material.IRON_DOOR_BLOCK) || b.getType().equals(Material.WOODEN_DOOR)) {
+            if (plugin.getDoors().contains(b.getType())) {
                 // is it the top or bottom of the door?
                 if (b.getData() >= 8) {
                     b = b.getRelative(BlockFace.DOWN);
@@ -59,7 +59,7 @@ public class LockClockListener implements Listener {
             if (plugin.getAddTracker().containsKey(uuid)) {
                 // is it an allowed block?
                 if (!plugin.getLockables().contains(b.getType())) {
-                    event.getPlayer().sendMessage(plugin.pluginName + "You are not allowed to lock that kind of block!");
+                    event.getPlayer().sendMessage(plugin.getPluginName() + "You are not allowed to lock that kind of block!");
                     plugin.getAddTracker().remove(uuid);
                     return;
                 }
@@ -86,7 +86,7 @@ public class LockClockListener implements Listener {
                     }
                 }
                 plugin.getAddTracker().remove(uuid);
-                event.getPlayer().sendMessage(plugin.pluginName + "Time lock location saved succesfully.");
+                event.getPlayer().sendMessage(plugin.getPluginName() + "Time lock location saved succesfully.");
                 return;
             }
             if (plugin.getMsgTracker().containsKey(uuid)) {
@@ -98,7 +98,7 @@ public class LockClockListener implements Listener {
                     plugin.getDoubleChestTracker().remove(uuid);
                 }
                 plugin.getMsgTracker().remove(uuid);
-                event.getPlayer().sendMessage(plugin.pluginName + "Time lock message saved succesfully.");
+                event.getPlayer().sendMessage(plugin.getPluginName() + "Time lock message saved succesfully.");
                 return;
             }
             LockClockLock rs = new LockClockLock(plugin, b.getLocation().toString());
@@ -116,11 +116,11 @@ public class LockClockListener implements Listener {
                                 lcq.deleteLock(l);
                             }
                         }
-                        event.getPlayer().sendMessage(plugin.pluginName + "Time lock removed succesfully.");
+                        event.getPlayer().sendMessage(plugin.getPluginName() + "Time lock removed succesfully.");
                         plugin.getUnlockTracker().remove(uuid);
                         return;
                     } else {
-                        event.getPlayer().sendMessage(plugin.pluginName + "You can only remove your own time locks.");
+                        event.getPlayer().sendMessage(plugin.getPluginName() + "You can only remove your own time locks.");
                         plugin.getUnlockTracker().remove(uuid);
                     }
                 }
@@ -136,7 +136,7 @@ public class LockClockListener implements Listener {
                         event.setCancelled(true);
                         // if no message set, use the default message
                         String message = (rs.getMessage().isEmpty()) ? String.format(plugin.getConfig().getString("default_message"), b.getType().toString(), plugin.getTime(end)) : rs.getMessage();
-                        event.getPlayer().sendMessage(plugin.pluginName + ChatColor.translateAlternateColorCodes('&', message));
+                        event.getPlayer().sendMessage(plugin.getPluginName() + ChatColor.translateAlternateColorCodes('&', message));
                     }
                 }
             }

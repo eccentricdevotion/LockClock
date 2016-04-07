@@ -3,6 +3,7 @@ package me.eccentric_nz.lockclock;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class LockClock extends JavaPlugin {
 
-    public String pluginName;
+    private String pluginName;
     LockClockDatabase service;
     private final HashMap<UUID, Scoreboard> scoreboards = new HashMap<UUID, Scoreboard>();
     private final HashMap<UUID, Integer> addTracker = new HashMap<UUID, Integer>();
@@ -22,9 +23,11 @@ public class LockClock extends JavaPlugin {
     private final HashMap<UUID, String> doubleChestTracker = new HashMap<UUID, String>();
     private final List<UUID> unlockTracker = new ArrayList<UUID>();
     private final List<Material> lockables = new ArrayList<Material>();
+    private final List<Material> doors = Arrays.asList(Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.DARK_OAK_DOOR, Material.IRON_DOOR_BLOCK, Material.JUNGLE_DOOR, Material.SPRUCE_DOOR, Material.WOODEN_DOOR);
 
     @Override
     public void onDisable() {
+        getServer().getScheduler().cancelTasks(this);
         try {
             service.connection.close();
         } catch (SQLException e) {
@@ -67,6 +70,8 @@ public class LockClock extends JavaPlugin {
         getCommand("unlock").setExecutor(new LockClockCommand(this));
         getCommand("clock").setExecutor(new LockClockCommand(this));
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockRunnable(this), 10L, 8L);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockDoorCloser(this), 20L, 60L);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockDoorWarner(this), 20L, 600L);
         for (String s : getConfig().getStringList("lockables")) {
             try {
                 lockables.add(Material.valueOf(s));
@@ -95,6 +100,10 @@ public class LockClock extends JavaPlugin {
         return String.format("%d", hours + minutes);
     }
 
+    public String getPluginName() {
+        return pluginName;
+    }
+
     public HashMap<UUID, Scoreboard> getScoreboards() {
         return scoreboards;
     }
@@ -117,6 +126,10 @@ public class LockClock extends JavaPlugin {
 
     public List<Material> getLockables() {
         return lockables;
+    }
+
+    public List<Material> getDoors() {
+        return doors;
     }
 
     public void debug(Object o) {

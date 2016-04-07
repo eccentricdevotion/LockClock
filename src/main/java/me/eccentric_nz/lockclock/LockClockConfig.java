@@ -13,18 +13,19 @@ public class LockClockConfig {
     private final LockClock plugin;
     private FileConfiguration config = null;
     private File configFile = null;
-//    HashMap<String, String> strOptions = new HashMap<String, String>();
-//    HashMap<String, Integer> intOptions = new HashMap<String, Integer>();
+    HashMap<String, String> strOptions = new HashMap<String, String>();
+    HashMap<String, Integer> intOptions = new HashMap<String, Integer>();
     HashMap<String, Boolean> boolOptions = new HashMap<String, Boolean>();
-    private List<String> lockables = Arrays.asList("ACACIA_DOOR", "ACACIA_FENCE_GATE", "BIRCH_DOOR", "BIRCH_FENCE_GATE", "DARK_OAK_DOOR", "DARK_OAK_FENCE_GATE", "FENCE_GATE", "GOLD_PLATE", "IRON_PLATE", "IRON_TRAPDOOR", "JUNGLE_DOOR", "JUNGLE_FENCE_GATE", "SPRUCE_DOOR", "SPRUCE_FENCE_GATE");
+    private final List<String> lockables = Arrays.asList("ACACIA_DOOR", "ACACIA_FENCE_GATE", "BIRCH_DOOR", "BIRCH_FENCE_GATE", "DARK_OAK_DOOR", "DARK_OAK_FENCE_GATE", "FENCE_GATE", "GOLD_PLATE", "IRON_PLATE", "IRON_TRAPDOOR", "JUNGLE_DOOR", "JUNGLE_FENCE_GATE", "SPRUCE_DOOR", "SPRUCE_FENCE_GATE");
 
     public LockClockConfig(LockClock plugin) {
         this.plugin = plugin;
         this.configFile = new File(plugin.getDataFolder(), "config.yml");
         this.config = YamlConfiguration.loadConfiguration(configFile);
         boolOptions.put("uuid_conversion_done", false);
-//        intOptions.put("withdraw", 5);
-//        strOptions.put("firstline", "XPKeeper");
+        boolOptions.put("debug", false);
+        intOptions.put("warn.time", 30);
+        strOptions.put("warn.message", "A nearby door will shortly close and lock. Time to exit the building!");
     }
 
     public void checkConfig() {
@@ -48,20 +49,20 @@ public class LockClockConfig {
             plugin.getConfig().set("lockables", tmp);
             System.out.println("[LockClock] Added " + a + " new lockable blocks to config");
         }
-//        // int values
-//        for (Map.Entry<String, Integer> entry : intOptions.entrySet()) {
-//            if (!config.contains(entry.getKey())) {
-//                plugin.getConfig().set(entry.getKey(), entry.getValue());
-//                i++;
-//            }
-//        }
-//        // string values
-//        for (Map.Entry<String, String> entry : strOptions.entrySet()) {
-//            if (!config.contains(entry.getKey())) {
-//                plugin.getConfig().set(entry.getKey(), entry.getValue());
-//                i++;
-//            }
-//        }
+        // int values
+        for (Map.Entry<String, Integer> entry : intOptions.entrySet()) {
+            if (!config.contains(entry.getKey())) {
+                plugin.getConfig().set(entry.getKey(), entry.getValue());
+                i++;
+            }
+        }
+        // string values
+        for (Map.Entry<String, String> entry : strOptions.entrySet()) {
+            if (!config.contains(entry.getKey())) {
+                plugin.getConfig().set(entry.getKey(), entry.getValue());
+                i++;
+            }
+        }
         plugin.saveConfig();
         if (i > 0) {
             System.out.println("[LockClock] Added " + i + " new items to config");
