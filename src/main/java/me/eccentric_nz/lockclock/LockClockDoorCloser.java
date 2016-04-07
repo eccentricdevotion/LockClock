@@ -30,11 +30,9 @@ public class LockClockDoorCloser implements Runnable {
                 if (plugin.getDoors().contains(m)) {
                     long now = ld.getLocation().getWorld().getTime();
                     if (now > ld.getStart() && now < ld.getEnd()) {
-                        plugin.debug("attempt to close door");
                         BlockState state = ld.getLocation().getBlock().getState();
                         Door door = (Door) state.getData();
                         if (!door.isTopHalf() && door.isOpen()) {
-                            plugin.debug("door is lower half and open");
                             Openable o = (Openable) state.getData();
                             o.setOpen(false);
                             state.setData((MaterialData) o);
