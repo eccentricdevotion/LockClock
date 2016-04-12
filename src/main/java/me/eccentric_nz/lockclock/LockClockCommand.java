@@ -101,7 +101,6 @@ public class LockClockCommand implements CommandExecutor {
             return true;
         }
         if (cmd.getName().equalsIgnoreCase("warn_toggle")) {
-            plugin.debug("warn_toggle");
             if (player == null) {
                 sender.sendMessage(plugin.getPluginName() + "Command can only be used by a player!");
                 return true;
