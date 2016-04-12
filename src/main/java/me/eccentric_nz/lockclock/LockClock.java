@@ -22,6 +22,7 @@ public class LockClock extends JavaPlugin {
     private final HashMap<UUID, String> msgTracker = new HashMap<UUID, String>();
     private final HashMap<UUID, String> doubleChestTracker = new HashMap<UUID, String>();
     private final List<UUID> unlockTracker = new ArrayList<UUID>();
+    private final List<UUID> warnToggleTracker = new ArrayList<UUID>();
     private final List<Material> lockables = new ArrayList<Material>();
     private final List<Material> doors = Arrays.asList(Material.ACACIA_DOOR, Material.BIRCH_DOOR, Material.DARK_OAK_DOOR, Material.IRON_DOOR_BLOCK, Material.JUNGLE_DOOR, Material.SPRUCE_DOOR, Material.WOODEN_DOOR);
 
@@ -65,10 +66,12 @@ public class LockClock extends JavaPlugin {
         String plug = getConfig().getString("plugin_name");
         pluginName = ChatColor.GOLD + "[" + plug + "]" + ChatColor.RESET + " ";
         pm.registerEvents(new LockClockListener(this), this);
-        getCommand("lockclock").setExecutor(new LockClockCommand(this));
-        getCommand("lockmsg").setExecutor(new LockClockCommand(this));
-        getCommand("unlock").setExecutor(new LockClockCommand(this));
-        getCommand("clock").setExecutor(new LockClockCommand(this));
+        LockClockCommand lockClockCommand = new LockClockCommand(this);
+        getCommand("lockclock").setExecutor(lockClockCommand);
+        getCommand("lockmsg").setExecutor(lockClockCommand);
+        getCommand("unlock").setExecutor(lockClockCommand);
+        getCommand("clock").setExecutor(lockClockCommand);
+        getCommand("warn_toggle").setExecutor(lockClockCommand);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockRunnable(this), 10L, 8L);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new LockClockDoorCloser(this), 20L, 60L);
         if (getConfig().getInt("warn.time") > 0) {
@@ -124,6 +127,10 @@ public class LockClock extends JavaPlugin {
 
     public List<UUID> getUnlockTracker() {
         return unlockTracker;
+    }
+
+    public List<UUID> getWarnToggleTracker() {
+        return warnToggleTracker;
     }
 
     public List<Material> getLockables() {

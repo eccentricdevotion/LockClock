@@ -77,14 +77,14 @@ public class LockClockQuery {
             statement = connection.createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            plugin.debug("Location update error for locks! " + e.getMessage());
+            plugin.debug("Location update error for locks [location]! " + e.getMessage());
         } finally {
             try {
                 if (statement != null) {
                     statement.close();
                 }
             } catch (SQLException e) {
-                plugin.debug("Location close error for locks! " + e.getMessage());
+                plugin.debug("Location close error for locks [location]! " + e.getMessage());
             }
         }
     }
@@ -96,14 +96,33 @@ public class LockClockQuery {
             statement = connection.createStatement();
             statement.executeUpdate(query);
         } catch (SQLException e) {
-            plugin.debug("Mesage update error for locks! " + e.getMessage());
+            plugin.debug("Mesage update error for locks [message]! " + e.getMessage());
         } finally {
             try {
                 if (statement != null) {
                     statement.close();
                 }
             } catch (SQLException e) {
-                plugin.debug("Message close error for locks! " + e.getMessage());
+                plugin.debug("Message close error for locks [message]! " + e.getMessage());
+            }
+        }
+    }
+
+    public void updateWarning(int data, int id) {
+        Statement statement = null;
+        String query = "UPDATE locks SET warn = " + data + " WHERE id = " + id;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            plugin.debug("Location update error for locks [warn]! " + e.getMessage());
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                plugin.debug("Location close error for locks [warn]! " + e.getMessage());
             }
         }
     }

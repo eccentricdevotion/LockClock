@@ -25,15 +25,17 @@ public class LockClockDoorWarner implements Runnable {
         LockClockAllLocks locks = new LockClockAllLocks(plugin);
         if (locks.resultSet()) {
             for (LockClockAllLocks.LockData ld : locks.getData()) {
-                Material m = ld.getLocation().getBlock().getType();
-                if (plugin.getDoors().contains(m)) {
-                    long now = ld.getLocation().getWorld().getTime();
-                    long time = plugin.getConfig().getLong("warn.time") * 20;
-                    String message = plugin.getPluginName() + plugin.getConfig().getString("warn.message");
-                    if (now > ld.getStart() - time && now < ld.getStart()) {
-                        for (Entity e : ld.getLocation().getWorld().getNearbyEntities(ld.getLocation(), 16.0d, 16.0d, 16.0d)) {
-                            if (e.getType().equals(EntityType.PLAYER)) {
-                                ((Player) e).sendMessage(message);
+                if (ld.shouldWarn()) {
+                    Material m = ld.getLocation().getBlock().getType();
+                    if (plugin.getDoors().contains(m)) {
+                        long now = ld.getLocation().getWorld().getTime();
+                        long time = plugin.getConfig().getLong("warn.time") * 20;
+                        String message = plugin.getPluginName() + plugin.getConfig().getString("warn.message");
+                        if (now > ld.getStart() - time && now < ld.getStart()) {
+                            for (Entity e : ld.getLocation().getWorld().getNearbyEntities(ld.getLocation(), 16.0d, 16.0d, 16.0d)) {
+                                if (e.getType().equals(EntityType.PLAYER)) {
+                                    ((Player) e).sendMessage(message);
+                                }
                             }
                         }
                     }

@@ -35,16 +35,24 @@ public class LockClockDatabase {
     public void createTable() {
         try {
             statement = connection.createStatement();
-            String queryLocks = "CREATE TABLE IF NOT EXISTS locks (id INTEGER PRIMARY KEY NOT NULL, location TEXT, start INTEGER, end INTEGER, message TEXT DEFAULT '', uuid TEXT DEFAULT '', player TEXT DEFAULT '')";
+            String queryLocks = "CREATE TABLE IF NOT EXISTS locks (id INTEGER PRIMARY KEY NOT NULL, location TEXT, start INTEGER, end INTEGER, message TEXT DEFAULT '', uuid TEXT DEFAULT '', player TEXT DEFAULT '', warn INTEGER DEFAULT '1')";
             statement.executeUpdate(queryLocks);
             statement.close();
-            // update inventories if there is no uuid column
+            // update locks if there is no uuid column
             String queryUUID = "SELECT sql FROM sqlite_master WHERE tbl_name = 'locks' AND sql LIKE '%uuid TEXT%'";
             ResultSet rsUUID = statement.executeQuery(queryUUID);
             if (!rsUUID.next()) {
                 String queryAlterU = "ALTER TABLE locks ADD uuid TEXT DEFAULT ''";
                 statement.executeUpdate(queryAlterU);
-                System.out.println("[LockClock] Adding UUID to database!");
+                System.out.println("[LockClock] Adding UUID field to database!");
+            }
+            // update locks if there is no warn column
+            String queryWarn = "SELECT sql FROM sqlite_master WHERE tbl_name = 'locks' AND sql LIKE '%warn INTEGER%'";
+            ResultSet rsWarn = statement.executeQuery(queryWarn);
+            if (!rsWarn.next()) {
+                String queryAlterW = "ALTER TABLE locks ADD warn INTEGER DEFAULT '1'";
+                statement.executeUpdate(queryAlterW);
+                System.out.println("[LockClock] Adding warn field to database!");
             }
         } catch (SQLException e) {
             System.err.println("[LockClock] Create table error: " + e);

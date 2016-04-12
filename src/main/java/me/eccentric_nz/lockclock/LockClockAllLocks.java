@@ -30,14 +30,17 @@ public class LockClockAllLocks {
     public boolean resultSet() {
         PreparedStatement statement = null;
         ResultSet rs = null;
-        String query = "SELECT location, start, end FROM locks";
+        String query = "SELECT location, start, end, warn FROM locks";
         try {
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
-                    LockData ld = new LockData(rs.getString("location"), rs.getLong("start"), rs.getLong("end"));
-                    data.add(ld);
+                    String l = rs.getString("location");
+                    if (!rs.wasNull() && l != null) {
+                        LockData ld = new LockData(l, rs.getLong("start"), rs.getLong("end"), rs.getBoolean("warn"));
+                        data.add(ld);
+                    }
                 }
             } else {
                 return false;
@@ -69,11 +72,13 @@ public class LockClockAllLocks {
         private final Location location;
         private final long start;
         private final long end;
+        private final boolean warn;
 
-        public LockData(String location, long start, long end) {
+        public LockData(String location, long start, long end, boolean warn) {
             this.location = getLocationFromBukkitString(location);
             this.start = start;
             this.end = end;
+            this.warn = warn;
         }
 
         public Location getLocation() {
@@ -86,6 +91,10 @@ public class LockClockAllLocks {
 
         public long getEnd() {
             return end;
+        }
+
+        public boolean shouldWarn() {
+            return warn;
         }
     }
 

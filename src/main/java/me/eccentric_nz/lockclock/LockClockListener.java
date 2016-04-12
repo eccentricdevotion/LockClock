@@ -106,7 +106,6 @@ public class LockClockListener implements Listener {
             if (rs.resultSet()) {
                 if (plugin.getUnlockTracker().contains(uuid)) {
                     if (rs.getUuid().equals(uuid) || event.getPlayer().isOp()) {
-                        plugin.getUnlockTracker().remove(uuid);
                         LockClockQuery lcq = new LockClockQuery(plugin);
                         lcq.deleteLock(rs.getId());
                         // check for double chests
@@ -123,6 +122,20 @@ public class LockClockListener implements Listener {
                         event.getPlayer().sendMessage(plugin.getPluginName() + "You can only remove your own time locks.");
                         plugin.getUnlockTracker().remove(uuid);
                     }
+                }
+                if (plugin.getWarnToggleTracker().contains(uuid)) {
+                    plugin.getWarnToggleTracker().remove(uuid);
+                    if (!plugin.getDoors().contains(b.getType())) {
+                        event.getPlayer().sendMessage(plugin.getPluginName() + "You didn't click a door.");
+                        return;
+                    }
+                    LockClockQuery lcq = new LockClockQuery(plugin);
+                    int warn = (rs.getWarn() == 1) ? 0 : 1;
+                    String wm = (rs.getWarn() == 1) ? "OFF" : "ON";
+                    lcq.updateWarning(warn, rs.getId());
+                    event.getPlayer().sendMessage(plugin.getPluginName() + String.format("The warn message for this door was turned %s.", wm));
+                    plugin.getUnlockTracker().remove(uuid);
+                    return;
                 }
                 // only if not the player whose lock it is
                 if (!uuid.equals(rs.getPlayer()) || plugin.getConfig().getBoolean("lock_for_owner")) {

@@ -98,6 +98,21 @@ public class LockClockCommand implements CommandExecutor {
             } else {
                 player.sendMessage(plugin.getPluginName() + "You do not have permission to do that!");
             }
+            return true;
+        }
+        if (cmd.getName().equalsIgnoreCase("warn_toggle")) {
+            plugin.debug("warn_toggle");
+            if (player == null) {
+                sender.sendMessage(plugin.getPluginName() + "Command can only be used by a player!");
+                return true;
+            } else if (player.hasPermission("lockclock.lock")) {
+                plugin.getWarnToggleTracker().add(player.getUniqueId());
+                player.sendMessage(plugin.getPluginName() + "Click the door you want to toggle the warning message for!");
+                return true;
+            } else {
+                player.sendMessage(plugin.getPluginName() + "You do not have permission to do that!");
+            }
+            return true;
         }
         if (cmd.getName().equalsIgnoreCase("clock")) {
             if (player == null) {

@@ -26,6 +26,7 @@ public class LockClockLock {
     private UUID uuid;
     private String player;
     private String message;
+    private int warn;
 
     public LockClockLock(LockClock plugin, String loc) {
         this.plugin = plugin;
@@ -48,6 +49,7 @@ public class LockClockLock {
                     this.uuid = UUID.fromString(rs.getString("uuid"));
                     this.player = rs.getString("player");
                     this.message = rs.getString("message");
+                    this.warn = rs.getInt("warn");
                 }
             } else {
                 return false;
@@ -96,5 +98,9 @@ public class LockClockLock {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getWarn() {
+        return warn;
     }
 }

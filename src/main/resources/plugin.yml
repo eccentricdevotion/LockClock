@@ -40,3 +40,8 @@ commands:
         usage: /<command>
         permission: lockclock.lock
         permission-message: You don't have the permission <permission> to use this command
+    warn_toggle:
+        description: Toggle the warning message for door locking on or off.
+        usage: /<command>
+        permission: lockclock.lock
+        permission-message: You don't have the permission <permission> to use this command
